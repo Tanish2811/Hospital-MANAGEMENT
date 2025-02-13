@@ -3,10 +3,10 @@ var express = require("express");
 var router = express.Router();
 
 var con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "hms project",
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
 });
 
 con.connect(function (err) {
@@ -19,7 +19,7 @@ con.connect(function (err) {
 
 module.exports.signup = function (username, email, password, status, callback) {
   var query =
-    "INSERT INTO `users`(`username`,`email`,`password`,`email_status`) VALUES ('" +
+    "INSERT INTO users(username,email,password,email_status) VALUES ('" +
     username +
     "','" +
     email +
@@ -38,7 +38,7 @@ module.exports.getuserid = function (email, callback) {
 
 module.exports.verify = function (username, email, token, callback) {
   var query =
-    "insert into `verify` (`username`,`email`,`token`) values ('" +
+    "insert into verify (username,email,token) values ('" +
     username +
     "','" +
     email +
@@ -62,7 +62,7 @@ module.exports.add_doctor = function (
   callback
 ) {
   var query =
-    "INSERT INTO `doctor`(`first_name`,`last_name`,`email`,`dob`,`gender`,`address`,`phone`,`image`,`department`,`biography`) values ('" +
+    "INSERT INTO doctor(first_name,last_name,email,dob,gender,address,phone,image,department,biography) values ('" +
     first_name +
     "','" +
     last_name +
@@ -117,25 +117,25 @@ module.exports.editDoc = function (
   callback
 ) {
   var query =
-    "update `doctor` set `first_name`='" +
+    "update doctor set first_name='" +
     first_name +
-    "', `last_name`='" +
+    "', last_name='" +
     last_name +
-    "', `email`='" +
+    "', email='" +
     email +
-    "', `dob`='" +
+    "', dob='" +
     dob +
-    "',`gender`='" +
+    "',gender='" +
     gender +
-    "',`address`='" +
+    "',address='" +
     address +
-    "',`phone`='" +
+    "',phone='" +
     phone +
-    "',`image`='" +
+    "',image='" +
     image +
-    "',`department`='" +
+    "',department='" +
     department +
-    "',`biography`='" +
+    "',biography='" +
     biography +
     "' where id=" +
     id;
@@ -153,15 +153,15 @@ module.exports.editEmp = function (
   callback
 ) {
   var query =
-    "update `employee` set `name`='" +
+    "update employee set name='" +
     name +
-    "', `email`='" +
+    "', email='" +
     email +
-    "', `contact`='" +
+    "', contact='" +
     contact +
-    "', `join_date`='" +
+    "', join_date='" +
     join_date +
-    "', `role`='" +
+    "', role='" +
     role +
     "' where id=" +
     id;
@@ -314,7 +314,7 @@ module.exports.findOne = function (email, callback) {
 
 module.exports.temp = function (id, email, token, callback) {
   var query =
-    "insert into `temp` (`id`,`email`,`token`) values ('" +
+    "insert into temp (id,email,token) values ('" +
     id +
     "','" +
     email +
@@ -332,7 +332,7 @@ module.exports.checktoken = function (token, callback) {
 
 module.exports.setpassword = function (id, newpassword, callback) {
   var query =
-    "update `users` set `password`='" + newpassword + "' where id=" + id;
+    "update users set password='" + newpassword + "' where id=" + id;
   con.query(query, callback);
 };
 
@@ -346,7 +346,7 @@ module.exports.add_employee = function (
   callback
 ) {
   var query =
-    "Insert into `employee` (`name`,`email`,`contact`,`join_date`,`role`,`salary`) values ('" +
+    "Insert into employee (name,email,contact,join_date,role,salary) values ('" +
     name +
     "','" +
     email +
@@ -373,7 +373,7 @@ module.exports.addMed = function (
   callback
 ) {
   var query =
-    "Insert into `store` (name,p_date,expire,expire_end,price,quantity) values('" +
+    "Insert into store (name,p_date,expire,expire_end,price,quantity) values('" +
     name +
     "','" +
     p_date +
@@ -445,7 +445,7 @@ module.exports.add_leave = function (
   callback
 ) {
   var query =
-    "Insert into `leaves` (`employee`,`emp_id`,`leave_type`,`date_from`,`date_to`,`reason`) values ('" +
+    "Insert into leaves (employee,emp_id,leave_type,date_from,date_to,reason) values ('" +
     name +
     "','" +
     id +
@@ -468,16 +468,16 @@ module.exports.getAllLeave = function (callback) {
 };
 
 module.exports.matchtoken = function (id, token, callback) {
-  var query = "select * from `verify` where token='" + token + "' and id=" + id;
+  var query = "select * from verify where token='" + token + "' and id=" + id;
   con.query(query, callback);
   console.log(query);
 };
 
 module.exports.updateverify = function (email, email_status, callback) {
   var query =
-    "update `users` set `email_status`='" +
+    "update users set email_status='" +
     email_status +
-    "' where `email`='" +
+    "' where email='" +
     email +
     "'";
   con.query(query, callback);
